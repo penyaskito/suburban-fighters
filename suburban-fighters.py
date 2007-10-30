@@ -29,7 +29,8 @@ def main():
     pygame.display.set_icon(icon)
     screen = pygame.display.set_mode((800,600), pygame.DOUBLEBUF)
     clock = pygame.time.Clock()
-    scoreboard = ScoreBoard(screen)
+    scoreboard1 = ScoreBoard(screen, 20)
+    scoreboard2 = ScoreBoard(screen, screen.get_width() - 220)
     pygame.display.set_caption('Suburban-fighters')
 
     while 1:
@@ -51,13 +52,14 @@ def main():
                 print _("boton") + str(event.button)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    scoreboard.hurt(5)
+                    scoreboard1.hurt(5)
                 elif event.key == pygame.K_ESCAPE:
                     sys.exit()
 
         #pintando el fondo de rojo
         screen.fill((255,0,0))
-        scoreboard.update()
+        scoreboard1.update()
+        scoreboard2.update()
 
         #refresco de pantalla
         pygame.display.flip()
