@@ -9,15 +9,21 @@ class ResourceLoader():
     '''
     images = {}
         
-    def load (self, uri, cache = False):
+    @staticmethod
+    def load (uri, cache = False):
         '''
         Carga una imagen (uri). Permite el cacheo si cache=True.
         '''
         img = None
-        if uri in self.images:
+        if uri in ResourceLoader.images:
             img = ResourceLoader.images[uri]
         else:
-            img = pygame.image.load(uri)
-            if cache:
-                ResourceLoader.images[uri] = img
+            try:
+                img = pygame.image.load(uri)
+                if cache:
+                    ResourceLoader.images[uri] = img
+            except Exception:
+                print "Error loading: ",uri
+                sys.exit(1)
+            
         return img

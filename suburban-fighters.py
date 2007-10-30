@@ -11,6 +11,7 @@ date 2007-10-11
 import sys
 import pygame
 import gettext #para traducir
+from ResourceLoader import ResourceLoader
 
 try:
     t = gettext.translation('suburban-fighters', './idiomas/')
@@ -22,7 +23,7 @@ except:
 def main():
     pygame.init()
     #inicializacion
-    icon = pygame.image.load('icons/suburban-icon-64x64.png')
+    icon = ResourceLoader.load('icons/suburban-icon-64x64.png', cache = True)
     pygame.display.set_icon(icon)
     screen = pygame.display.set_mode((800,600), pygame.DOUBLEBUF)
     clock = pygame.time.Clock()
