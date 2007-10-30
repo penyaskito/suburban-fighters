@@ -14,6 +14,7 @@ import pygame
 import gettext #para traducir
 from ResourceLoader import ResourceLoader
 from ScoreBoard import ScoreBoard
+from Timer import Timer
 
 try:
     t = gettext.translation('suburban-fighters', './idiomas/')
@@ -29,6 +30,7 @@ def main():
     pygame.display.set_icon(icon)
     screen = pygame.display.set_mode((800,600), pygame.DOUBLEBUF)
     clock = pygame.time.Clock()
+    timer = Timer(screen)
     scoreboard1 = ScoreBoard(screen, 20)
     scoreboard2 = ScoreBoard(screen, screen.get_width() - 220)
     pygame.display.set_caption('Suburban-fighters')
@@ -53,6 +55,8 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     scoreboard1.hurt(5)
+                if event.key == pygame.K_RETURN:
+                    scoreboard2.hurt(5)                    
                 elif event.key == pygame.K_ESCAPE:
                     sys.exit()
 
@@ -60,6 +64,7 @@ def main():
         screen.fill((255,0,0))
         scoreboard1.update()
         scoreboard2.update()
+        timer.update(pygame.time.get_ticks())
 
         #refresco de pantalla
         pygame.display.flip()
