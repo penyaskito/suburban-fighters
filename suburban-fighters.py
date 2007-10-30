@@ -12,6 +12,7 @@ import sys
 import pygame
 import gettext #para traducir
 from ResourceLoader import ResourceLoader
+from ScoreBoard import ScoreBoard
 
 try:
     t = gettext.translation('suburban-fighters', './idiomas/')
@@ -27,6 +28,7 @@ def main():
     pygame.display.set_icon(icon)
     screen = pygame.display.set_mode((800,600), pygame.DOUBLEBUF)
     clock = pygame.time.Clock()
+    scoreboard = ScoreBoard(screen)
     pygame.display.set_caption('Suburban-fighters')
 
     while 1:
@@ -47,15 +49,18 @@ def main():
 
                 print _("boton") + str(event.button)
             if event.type == pygame.KEYDOWN:
-                if not event.key == pygame.K_ESCAPE:
-                    print event.key
+                if event.key == pygame.K_SPACE:
+                    scoreboard.hurt(5)
                 elif event.key == pygame.K_ESCAPE:
                     sys.exit()
 
         #pintando el fondo de rojo
         screen.fill((255,0,0))
+        scoreboard.update()
+
         #refresco de pantalla
         pygame.display.flip()
+
 
 #esto es para que lance el main cuando se ejecute el fichero
 if __name__ == "__main__": main()
