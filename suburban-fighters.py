@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# $Id$
 
 """
 Suburban-fighters es un juego 2D de lucha
