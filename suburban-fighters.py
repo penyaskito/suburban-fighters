@@ -37,7 +37,7 @@ def main():
     scoreboard2 = ScoreBoard(screen, screen.get_width() - 220)
     pygame.display.set_caption('Suburban-fighters')
 
-    chica = AnimatedSprite.AnimatedSprite('images/ima.png', 9, 5)
+    chica = AnimatedSprite.AnimatedSprite('images/ima.png', 9, 5, 14)
 
     while 1:
         clock.tick(40) #40 frames por segundo
@@ -67,7 +67,9 @@ def main():
                     elif event.key == pygame.K_SPACE:
                         scoreboard1.hurt(5)
                     elif event.key == pygame.K_RETURN:
-                        scoreboard2.hurt(5)                    
+                        scoreboard2.hurt(5)
+                    elif event.key == pygame.K_a and chica.en_suelo():
+                        chica.vel_caida = -20
 
                 elif event.key == pygame.K_ESCAPE:
                     sys.exit()

@@ -26,6 +26,9 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.andando_derecha = False
         self.andando_izquierda = False
         self.velocidad = 5
+        self.vel_caida = 0
+        self.gravedad = 0.7
+        self.suelo = 460
         # Call update to set our first image.
         self.update(pygame.time.get_ticks())
 
@@ -40,19 +43,40 @@ class AnimatedSprite(pygame.sprite.Sprite):
         elif self.andando_izquierda:
             self.animacion = self.andando
             self.frame = 0
+
+        # Callendo
+        if not self.en_suelo() or self.vel_caida < 0:
+            if self.vel_caida < -10:
+                self.image = self._images[10]
+            elif self.vel_caida > 10:
+                self.image = self._images[12]
+            else: self.image = self._images[11]
+            self.vel_caida += self.gravedad
+            self.center[1] += self.vel_caida
+        else: self.vel_caida = 0
+        ###
+        if self.en_suelo():
+            self.animar(t)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.center
+            
+        if self.andando_derecha:
+            self.center[0] += self.velocidad
+        elif self.andando_izquierda:
+            self.center[0] -= self.velocidad
+
+
+    def en_suelo(self):
+        return self.rect.bottom >= self.suelo
+
+    def animar(self, t):
         if t - self._last_update > self._delay:
             self._frame += 1
             if self._frame >= len(self.animacion) + self.animacion[0]: self._frame = self.animacion[0]
             self.image = self._images[self._frame]
-            self.rect = self.image.get_rect()
-            self.rect.center = self.center
-            
-            if self.andando_derecha:
-                self.center[0] += self.velocidad
-            elif self.andando_izquierda:
-                self.center[0] -= self.velocidad
-
             self._last_update = t
+
+
 
     def load(self, path, filas, columnas):
         """
