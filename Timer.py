@@ -1,21 +1,33 @@
 # $Id$
 
 import pygame
+import time
 import ResourceLoader
 
 class Timer(pygame.sprite.Sprite):
-    def __init__(self, screen, fps=40):
-        self.seconds = 60
-        self.screen = screen
-        self._delay = 1000 / fps
-        self._last_update = 0
-        self.font = pygame.font.SysFont("Verdana",40)
+
+    TIME = 60
+    
+    ESTADO_PARADO = 0
+    ESTADO_CORRIENDO = 1
+    
+    def __init__(self, screen):
+        self._screen = screen
+        self._inicial = time.time()
+        self._estado = self.ESTADO_CORRIENDO
+        self._seconds = self.TIME
+        self._font = pygame.font.SysFont("Verdana",40)
         
     def update(self, t): 
-        s = self.font.render(str(self.seconds),True,(255,230,50))
+        s = self._font.render(str("%(var)02d" % {"var":self._seconds}),True,(255,230,50))
 
-        if t - self._last_update > self._delay:
-            self.seconds -= 1
-        print "Secs: ",self.seconds
-        self.screen.blit (s, (380, 10))        
-        self._last_update = t
+        self._screen.blit (s, (280, 10))        
+
+        if self._estado == self.ESTADO_CORRIENDO:
+            self._seconds = self.TIME - (time.time() - self._inicial)
+        if self._seconds < 0:
+            self._seconds = 0
+            self._estado = self.ESTADO_PARADO
+    
+    def get_seconds(self):
+        return self._seconds
