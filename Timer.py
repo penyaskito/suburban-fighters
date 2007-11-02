@@ -11,16 +11,24 @@ class Timer(pygame.sprite.Sprite):
     ESTADO_PARADO = 0
     ESTADO_CORRIENDO = 1
     
+    COLOR_NORMAL = (255,230,50)
+    COLOR_TERMINANDO = (255, 50, 0)
+    
     def __init__(self, screen):
         self._posicion = (screen.get_width() / 2 - 20, 10)
         self._screen = screen
         self._inicial = time.time()
         self._estado = self.ESTADO_CORRIENDO
         self._seconds = self.TIME
+        self._color = self.COLOR_NORMAL
         self._font = pygame.font.SysFont("Verdana",40)
         
     def update(self, t): 
-        s = self._font.render(str("%(var)02d" % {"var":self._seconds}),True,(255,230,50))
+        # actualiza el color
+        if self._seconds < 6:
+            self._color = self.COLOR_TERMINANDO
+            
+        s = self._font.render(str("%(var)02d" % {"var":self._seconds}),True, self._color)
 
         self._screen.blit (s, self._posicion)        
         if self._estado == self.ESTADO_CORRIENDO:
