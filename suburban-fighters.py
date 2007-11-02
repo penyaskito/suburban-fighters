@@ -14,7 +14,7 @@ import sys
 import pygame
 import gettext #para traducir
 from ResourceLoader import ResourceLoader
-import AnimatedSprite
+import fighter
 from ScoreBoard import ScoreBoard
 from Timer import Timer
 
@@ -37,7 +37,7 @@ def main():
     scoreboard2 = ScoreBoard(screen, screen.get_width() - 220)
     pygame.display.set_caption('Suburban-fighters')
 
-    chica = AnimatedSprite.AnimatedSprite('images/ima.png', 9, 5, 14)
+    chica = fighter.Fighter('images/ima.png', 9, 5, 14)
 
     while 1:
         clock.tick(40) #40 frames por segundo
@@ -68,7 +68,7 @@ def main():
                         scoreboard1.hurt(5)
                     elif event.key == pygame.K_RETURN:
                         scoreboard2.hurt(5)
-                    elif event.key == pygame.K_a and chica.en_suelo():
+                    elif event.key == pygame.K_UP and chica.en_suelo():
                         chica.vel_caida = -20
 
                 elif event.key == pygame.K_ESCAPE:
@@ -82,7 +82,7 @@ def main():
 
         #pintando el fondo de rojo
         screen.fill((255,0,0))
-        chica.update(pygame.time.get_ticks())
+        chica.update()
         screen.blit(chica.image, chica.rect)
         scoreboard1.update()
         scoreboard2.update()
