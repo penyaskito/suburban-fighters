@@ -74,9 +74,9 @@ def main():
                     elif event.key == pygame.K_UP and chica.en_suelo():
                         chica.vel_caida = -20
                     elif event.key == pygame.K_i:
-                        fxs.add(effect.zoom_in_fx(chica.image, chica.rect.center, 10))
+                        fxs.add(effect.zoom_fx(chica.image, chica.rect.center,"in", 10))
                     elif event.key == pygame.K_o:
-                        fxs.add(effect.zoom_out_fx(chica.image, chica.rect.center, 10))
+                        fxs.add(effect.zoom_fx(chica.image, chica.rect.center,"out", 10))
 
                 elif event.key == pygame.K_ESCAPE:
                     sys.exit()
