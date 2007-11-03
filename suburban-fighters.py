@@ -17,6 +17,7 @@ from ResourceLoader import ResourceLoader
 import fighter
 from ScoreBoard import ScoreBoard
 from Timer import Timer
+import effect
 
 try:
     t = gettext.translation('suburban-fighters', './idiomas/')
@@ -38,6 +39,8 @@ def main():
     pygame.display.set_caption('Suburban-fighters')
 
     chica = fighter.Fighter('images/ima.png', 9, 5, 14)
+    
+    fxs = pygame.sprite.Group()
 
     while 1:
         clock.tick(40) #40 frames por segundo
@@ -70,6 +73,10 @@ def main():
                         scoreboard2.hurt(5)
                     elif event.key == pygame.K_UP and chica.en_suelo():
                         chica.vel_caida = -20
+                    elif event.key == pygame.K_i:
+                        fxs.add(effect.zoom_in_fx(chica.image, chica.rect.center, 10))
+                    elif event.key == pygame.K_o:
+                        fxs.add(effect.zoom_out_fx(chica.image, chica.rect.center, 10))
 
                 elif event.key == pygame.K_ESCAPE:
                     sys.exit()
@@ -83,11 +90,12 @@ def main():
         #pintando el fondo de rojo
         screen.fill((255,0,0))
         chica.update()
+        fxs.update()
         screen.blit(chica.image, chica.rect)
         scoreboard1.update()
         scoreboard2.update()
         timer.update(pygame.time.get_ticks())
-
+        fxs.draw(screen)
         #refresco de pantalla
         pygame.display.flip()
 
