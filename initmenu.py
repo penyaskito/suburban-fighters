@@ -1,10 +1,5 @@
 #!/usr/bin/python
 
-"""
-Shooter2D
-author danigm <danigm@gmail.com>
-"""
-
 import sys
 import pygame
 import menu

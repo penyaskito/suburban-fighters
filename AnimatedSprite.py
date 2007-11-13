@@ -47,7 +47,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
             self.image = self._images[self._frame]
             self._last_update = t
 
-    def load(self, path, filas, columnas):
+    def load(self, path, filas, columnas, flip="True"):
         '''
         Carga una imagen de tipo tile, en un vector de imagenes.
         Devuelve un vector de imagenes.
@@ -56,10 +56,12 @@ class AnimatedSprite(pygame.sprite.Sprite):
         columnas: es el numero de frames en horizontal
         '''
         #TODO: tener la posibilidad de guardar el flip (inverso).
-        
+
         images = []
         # cargamos la imagen
         img = ResourceLoader.ResourceLoader.load(path)
+        if flip:
+            img_flip = pygame.transform.flip(img, True, False)
         # el alto y el ancho de cada frame
         alto = img.get_height() / filas
         ancho = img.get_width() / columnas
@@ -73,6 +75,17 @@ class AnimatedSprite(pygame.sprite.Sprite):
                 aux_img = aux_img.convert()
                 aux_img.set_colorkey(aux_img.get_at((0,0)))
                 images.append(aux_img)
+
+        if flip:
+            for i in range(filas):
+                for j in range(columnas):
+                    aux_img = pygame.Surface((ancho, alto))
+                    # el area para recortar
+                    area = pygame.Rect(j*ancho, i*alto, ancho, alto)
+                    aux_img.blit(img_flip, (0,0), area)
+                    aux_img = aux_img.convert()
+                    aux_img.set_colorkey(aux_img.get_at((0,0)))
+                    images.append(aux_img)
 
         return images
         

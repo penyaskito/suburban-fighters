@@ -1,6 +1,5 @@
 import pygame
 import sys
-import hsl2rgb
 
 
 #    font = pygame.font.SysFont("Akbar",30)

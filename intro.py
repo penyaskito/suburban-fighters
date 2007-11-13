@@ -3,7 +3,6 @@
 
 import pygame
 import sys
-import suburbanfighters
 from ResourceLoader import ResourceLoader
 import fighter
 

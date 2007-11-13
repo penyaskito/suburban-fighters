@@ -7,7 +7,8 @@ class Fighter(AnimatedSprite.AnimatedSprite):
     def __init__(self, image, filas, columnas, fps=10):
         AnimatedSprite.AnimatedSprite.__init__(self, image, filas, columnas, fps)
         # animaciones propias
-        self.parado = [0, 1, 2, 3, 4]
+        #self.parado = [0, 1, 2, 3, 4]
+        self.parado = [15, 16, 17, 18, 19]
         self.andando = [5, 6, 7, 8, 9]
         # la posicion en pantalla
         self.center = [100,100]
