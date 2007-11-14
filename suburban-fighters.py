@@ -35,7 +35,7 @@ def main():
     clock = pygame.time.Clock()
     timer = Timer(screen)
     scoreboard1 = ScoreBoard(screen, 20)
-    scoreboard2 = ScoreBoard(screen, screen.get_width() - 220)
+    scoreboard2 = ScoreBoard(screen, screen.get_width() - 220,False)
     pygame.display.set_caption('Suburban-fighters')
 
     chica = fighter.Fighter('images/tiete.png', 3, 5, 10)

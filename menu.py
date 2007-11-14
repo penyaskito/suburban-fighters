@@ -6,13 +6,15 @@ import sys
 #    surfont = font.render("Eggs are good for you, but not on the eiffel tower",True,(0,255,255))
 #    screen.blit(surfont, surfont.get_rect())
 class Menu:
-    def __init__(self, screen, options,margen_sup=0,margen_izq=0,interlineado=20,letra=("Akbar",90,(0,125,255),(0,225,255)),color_base=(113,113,113),color_selec=(213,213,213)):
+    def __init__(self, screen, options,margen_sup=0,margen_izq=0,interlineado=20,letra=("Akbar",90,(0,125,255),(0,225,255)),color_base=(113,113,113),color_selec=(213,213,213),menuEnBucle=True):
         self.options=options
         self.position=0
         self.margen_sup=margen_sup
         self.margen_izq=margen_izq
         self.interlineado=interlineado
         self.screen=screen
+        self.menuEnBucle=menuEnBucle
+        
         self.color_base=color_base
         self.color_selec=color_selec
         
@@ -32,12 +34,15 @@ class Menu:
         self.alto=self.surfont[0].get_height()
         
     def update(self):
-        #comprobar que no se sale del array
-        if self.position < 0:
-            self.position = 0
-        if self.position >= len(self.options):
-            self.position = len(self.options)-1
-        
+        #actuacion en caso de que se salga del array
+        if self.menuEnBucle:
+            self.position=self.position%len(self.options)
+        else:
+            if self.position < 0:
+                self.position = 0
+            elif self.position >= len(self.options):
+                self.position = len(self.options)-1
+                
         #mostrar por pantalla en que posicion "se enkuentra el cursor"
         print self.position , ": " , self.options[self.position]
             

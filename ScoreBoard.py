@@ -11,7 +11,8 @@ class ScoreBoard(pygame.sprite.Sprite):
     COLOR_FUERTE = (0,255,255)
     COLOR_AGONICO = (255, 100, 0)
     
-    def __init__(self, screen, pos):
+    #direccion=True -> pierde vida para la izq,  False-> pierde vida hacia la derecha
+    def __init__(self, screen, pos, direccion=True):
         self._screen = screen
         # pos es la posicion (x) donde empieza la barra
         self._pos = pos
@@ -19,6 +20,7 @@ class ScoreBoard(pygame.sprite.Sprite):
         self._player_name_font = pygame.font.SysFont("Verdana",20)
         self._player_name = "La Mari"
         pygame.draw.rect(self._screen, (0,0,255), (self._pos, 20, 200, 20))
+        self.direccion=direccion
         self._barraVida = pygame.draw.rect(self._screen, (0,255,255), \
                 (self._pos + 2, 22, 196, 16))
     
@@ -28,15 +30,24 @@ class ScoreBoard(pygame.sprite.Sprite):
         # el elemento 2 es el width, verdad?
         if (self._barraVida[2] != width):
             self._barraVida[2] -= 1
+        offset = (196 -self._barraVida[2])
         if self._barraVida[2] > 30:
             color = self.COLOR_FUERTE 
         else:
             color = self.COLOR_AGONICO
         
         pygame.draw.rect(self._screen, (0,0,255), (self._pos, 20, 200, 20))
-        pygame.draw.rect(self._screen, color, self._barraVida)
-        s = self._player_name_font.render(self.get_player_name(), True, (255,230,50))
-        self._screen.blit (s, (self._pos, 40, 200, 20))
+        if self.direccion:
+            pygame.draw.rect(self._screen, color, self._barraVida)
+            s = self._player_name_font.render(self.get_player_name(), True, (255,230,50))
+            self._screen.blit (s, (self._pos, 40, 200, 20))
+        else:
+            barraVida2=pygame.draw.rect(self._screen, (0,255,255), \
+                (self._pos + 2 + offset, 22, self._barraVida[2], 16))
+            pygame.draw.rect(self._screen, color, barraVida2)
+            s = self._player_name_font.render(self.get_player_name(), True, (255,230,50))
+            self._screen.blit (s, (self._pos, 40, 200, 20))
+        
         
     def hurt (self, score):
         oldVida = self._vida
