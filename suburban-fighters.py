@@ -38,7 +38,7 @@ def main():
     scoreboard2 = ScoreBoard(screen, screen.get_width() - 220)
     pygame.display.set_caption('Suburban-fighters')
 
-    chica = fighter.Fighter('images/boceto2.png', 3, 5, 10)
+    chica = fighter.Fighter('images/tiete.png', 3, 5, 10)
     
     fxs = pygame.sprite.Group()
 
