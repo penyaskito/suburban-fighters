@@ -21,6 +21,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self._images = self.load(image, filas, columnas)
         self._animacion = [0]
+        self.nimages = filas * columnas
 
         # Track the time we started, and the time between updates.
         # Then we can figure out when we have to switch the image.
@@ -42,7 +43,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         '''
         if t - self._last_update > self._delay:
             self._frame += 1
-            if self._frame >= len(self._animacion) + self._animacion[0]:
+            if not self._frame in self._animacion:
                 self._frame = self._animacion[0]
             self.image = self._images[self._frame]
             self._last_update = t
@@ -77,8 +78,10 @@ class AnimatedSprite(pygame.sprite.Sprite):
                 images.append(aux_img)
 
         if flip:
+            cols = range(columnas)
+            cols.reverse()
             for i in range(filas):
-                for j in range(columnas):
+                for j in cols:
                     aux_img = pygame.Surface((ancho, alto))
                     # el area para recortar
                     area = pygame.Rect(j*ancho, i*alto, ancho, alto)
