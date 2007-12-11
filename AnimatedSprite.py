@@ -56,7 +56,6 @@ class AnimatedSprite(pygame.sprite.Sprite):
         filas: es el numero de frames en vertical
         columnas: es el numero de frames en horizontal
         '''
-        #TODO: tener la posibilidad de guardar el flip (inverso).
 
         images = []
         # cargamos la imagen

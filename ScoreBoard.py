@@ -54,9 +54,16 @@ class ScoreBoard(pygame.sprite.Sprite):
         self._vida -= score
         if (self._vida < 0):
             self._vida = 0
+        return self._vida
             
     def get_vida(self):
         return self._vida
     
+    def set_vida(self, vida):
+        self._vida = vida
+    
     def get_player_name(self):
         return self._player_name
+
+    def set_player_name(self, player_name):
+        self._player_name = player_name
