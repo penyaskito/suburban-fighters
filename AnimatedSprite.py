@@ -20,6 +20,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         '''
         pygame.sprite.Sprite.__init__(self)
         self._images = self.load(image, filas, columnas)
+        self._hitmasks = self.hm(self._images)
         self._animacion = [0]
         self.nimages = filas * columnas
 
@@ -31,10 +32,25 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self._frame = self._animacion[0]
 
         self.image = self._images[self._frame]
+        self.hitmask = self._hitmasks[self._frame]
         self.rect = self.image.get_rect()
         
         # Call update to set our first image.
         self.animate(pygame.time.get_ticks())
+
+    def hm(self, images):
+        '''
+        Crea un vector de mascaras para las colisiones
+        del vector de imagenes
+        '''
+        hitmasks = []
+        for i in images:
+            hitmasks.append(pygame.surfarray.array_colorkey(i))
+            # Esto es por un bug conocido de pygame
+            i.unlock()
+            i.unlock()
+            # Esto es por un bug conocido de pygame
+        return hitmasks
 
     def animate(self, t):
         '''
@@ -46,6 +62,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
             if not self._frame in self._animacion:
                 self._frame = self._animacion[0]
             self.image = self._images[self._frame]
+            self.hitmask = self._hitmasks[self._frame]
             self._last_update = t
 
     def load(self, path, filas, columnas, flip="True"):
@@ -73,6 +90,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
                 area = pygame.Rect(j*ancho, i*alto, ancho, alto)
                 aux_img.blit(img, (0,0), area)
                 aux_img = aux_img.convert()
+                aux_img = self.clip(aux_img, aux_img.get_at((0,0)))
                 aux_img.set_colorkey(aux_img.get_at((0,0)))
                 images.append(aux_img)
 
@@ -86,6 +104,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
                     area = pygame.Rect(j*ancho, i*alto, ancho, alto)
                     aux_img.blit(img_flip, (0,0), area)
                     aux_img = aux_img.convert()
+                    aux_img = self.clip(aux_img, aux_img.get_at((0,0)))
                     aux_img.set_colorkey(aux_img.get_at((0,0)))
                     images.append(aux_img)
 
@@ -100,6 +119,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
         self._frame = frame
         self.image = self._images[self._frame]
+        self.hitmask = self._hitmasks[self._frame]
         
     def set_animation(self, animation):
         '''
@@ -110,3 +130,31 @@ class AnimatedSprite(pygame.sprite.Sprite):
         '''
         
         self._animacion = animation
+
+    def clip(self, image, colorkey):
+        '''
+        Recibe un surface, y devuelve el surface ajustado en x
+        '''
+        minx = image.get_width()
+        maxx = 0
+        for j in range(0, image.get_height(), 10):
+            for i in range(image.get_width()):
+                pixel = image.get_at((i,j))
+                if pixel != colorkey:
+                    if i < minx:
+                        minx = i
+                    if i > maxx:
+                        maxx = i
+
+        ancho = maxx - minx
+        alto = image.get_height()
+        if ancho < 0:
+            return image
+        new_image = pygame.Surface((ancho, alto))
+        area = pygame.Rect(minx, 0, ancho, alto)
+        new_image.blit(image, (0, 0), area)
+        new_image = new_image.convert()
+
+        return new_image
+
+

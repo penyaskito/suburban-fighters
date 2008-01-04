@@ -2,6 +2,7 @@
 
 import pygame
 import AnimatedSprite
+import pdb
 
 LEFT, RIGHT, UP, DOWN, PUNCH, KICK, PROTECT = range(7)
 
@@ -14,6 +15,9 @@ class Fighter(AnimatedSprite.AnimatedSprite):
         self.parado = [0, 1, 2, 3, 4]
         self.andando = [5, 6, 7, 8, 9]
         self.saltando = [10,11,12]
+        self.punch = [19]
+        self.kick = [21,22,23,24]
+        self.to_hurt = False
         # la posicion en pantalla
         self.center = pos
         self.rect.center = self.center
@@ -21,6 +25,8 @@ class Fighter(AnimatedSprite.AnimatedSprite):
         # TODO hacer esto con binarios
         self.andando_derecha = False
         self.andando_izquierda = False
+        self.golpeando = False
+        self.patada = False
         # velocidad de movimiento horizontal
         self.velocidad = 5
         # velocidad de movimiento vertical
@@ -36,7 +42,7 @@ class Fighter(AnimatedSprite.AnimatedSprite):
         self.scoreboard = 0
         self.other_player = 0
         #teclas de movimiento [izquierda, derecha, arriba, abajo, cate, patada, protegerse]
-        self.keys = [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN, 0, 0, 0]
+        self.keys = [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN, pygame.K_z, pygame.K_x, 0]
 
     def update(self):
         old_x = self.center[0]
@@ -59,6 +65,15 @@ class Fighter(AnimatedSprite.AnimatedSprite):
             self.rect.bottom = self.suelo
             self.center[1] = self.rect.centery
         ###
+        if self.golpeando:
+            self.set_animation(self.punch)
+            if self._frame == self.punch[-1]:
+                self.golpeando = False
+        elif self.patada:
+            self.set_animation(self.kick)
+            if self._frame == self.kick[-1]:
+                self.patada = False
+
         if self.en_suelo():
             self.animate(pygame.time.get_ticks())
         self.rect = self.image.get_rect()
@@ -70,9 +85,13 @@ class Fighter(AnimatedSprite.AnimatedSprite):
         elif self.andando_izquierda:
             self.center[0] -= self.velocidad
 
-        if self.rect.colliderect(self.other_player.rect) and (self.en_suelo()):
-            self.center[0], self.center[1] = old_x, old_y
-            self.rect.center = self.center
+        if self.rect.colliderect(self.other_player.rect) and (self.en_suelo()) and self.to_hurt:
+            if self.golpeando:
+                self.other_player.hurt(1)
+                self.to_hurt = False
+            elif self.patada:
+                self.other_player.hurt(3)
+                self.to_hurt = False
 
     def en_suelo(self):
         return self.rect.bottom >= self.suelo
@@ -90,6 +109,8 @@ class Fighter(AnimatedSprite.AnimatedSprite):
             self.andando = map(self.masx, self.andando)
             self.parado = map(self.masx, self.parado)
             self.saltando = map(self.masx, self.saltando)
+            self.kick = map(self.masx, self.kick)
+            self.punch = map(self.masx, self.punch)
             return True
 
     def flip(self):
@@ -100,6 +121,8 @@ class Fighter(AnimatedSprite.AnimatedSprite):
         self.andando = map(self.masx, self.andando)
         self.parado = map(self.masx, self.parado)
         self.saltando = map(self.masx, self.saltando)
+        self.kick = map(self.masx, self.kick)
+        self.punch = map(self.masx, self.punch)
 
     def masx(self, num):
         '''
@@ -127,6 +150,13 @@ class Fighter(AnimatedSprite.AnimatedSprite):
                 self.andando_izquierda = True
             elif event.key == self.keys[UP] and self.en_suelo():
                 self.vel_caida = -20
+
+            if event.key == self.keys[PUNCH]:
+                self.golpeando = True
+                self.to_hurt = True
+            elif event.key == self.keys[KICK]:
+                self.patada = True
+                self.to_hurt = True
 
         elif event.type == pygame.KEYUP:
             if event.key == self.keys[RIGHT]:

@@ -37,7 +37,7 @@ def main():
     timer = Timer(screen)
     scoreboard1 = ScoreBoard(screen, 20)
     scoreboard2 = ScoreBoard(screen, screen.get_width() - 220,False)
-    player1 = fighter.Fighter('images/tiete.png', 3, 5, 10, name='danigm', pos=[100,100])
+    player1 = fighter.Fighter('images/ima.png', 9, 5, 10, name='danigm', pos=[100,100])
     player2 = fighter.Fighter('images/ima.png', 9, 5, 10, name='chica', pos=[540,100])
     player2.flip()
     player1.set_scoreboard(scoreboard1)
